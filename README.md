@@ -2,7 +2,7 @@
 
 Personal configuration managed with Git and [GNU Stow](https://www.gnu.org/software/stow/), one of the approaches linked from the [dotfiles guide](https://dotfiles.github.io/tutorials/).
 
-This repository starts empty. Add configurations gradually, one tool at a time.
+Add configurations gradually, one tool at a time. The `agents` package shares global coding preferences between Codex and Claude Code.
 
 ## Layout
 
@@ -36,6 +36,26 @@ make install
 ```
 
 On Linux, install `stow` and `make` with your package manager instead of using Homebrew.
+
+## Global agent preferences
+
+Edit [AGENTS.md](AGENTS.md) at the repository root to update the shared instructions. The `agents` package links that file into both tools' global instruction locations:
+
+| Tool | Global instruction file |
+| --- | --- |
+| Codex | `~/.codex/AGENTS.md` |
+| Claude Code | `~/.claude/CLAUDE.md` |
+
+```sh
+make check PACKAGES=agents
+make install PACKAGES=agents
+```
+
+If either destination already exists, merge any preferences you want to keep into the shared `AGENTS.md`, then back up and move the original file outside the repository before installing. Stow will report a conflict until the destination is available.
+
+These are user-wide defaults for local sessions across projects; project instructions still apply. Start a new session after editing the file. This package uses the default configuration directories; a custom `CODEX_HOME` or `CLAUDE_CONFIG_DIR` needs its corresponding instruction file linked separately.
+
+See the [Codex instruction guide](https://learn.chatgpt.com/docs/agent-configuration/agents-md) and [Claude Code memory documentation](https://code.claude.com/docs/en/memory). Claude's Cowork sessions do not load symlinked user instruction files; this setup targets Codex and Claude Code.
 
 ## Add your first dotfile
 
